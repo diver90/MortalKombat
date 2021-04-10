@@ -25,36 +25,41 @@ const player2 = {
 
 function createElement(tag, className) {
     let $element = document.createElement(tag);
-    $element.classList.add(className);
+    if(className){
+        $element.classList.add(className);
+    }
    return $element;
 }
 
-function createPlayer(playerClass, player ) {
-    const $player = createElement('div', playerClass);
+function createPlayer(playerObj) {
+    const $player = createElement('div', 'player' + playerObj.player);
     const $progressbar = createElement('div', 'progressbar');
     const $character = createElement('div', 'character');
-    const $life = createElement('div','life');
-    $life.innerHTML = player.hp;
+    const $life = createElement('div', 'life');
     const $name = createElement('div', 'name');
-    $name.innerHTML = player.name;
-    const $img = document.createElement('img');
-    $img.src = player.img;
+    const $img = createElement('img');
+
+    $life.style.width = playerObj.hp + '%';
+    $name.innerText = playerObj.name;
+    $img.src = playerObj.img;
+
     $player.appendChild($progressbar);
     $player.appendChild($character);
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
     $character.appendChild($img);
-    const $arenas = document.querySelector('.arenas');
-    $arenas.appendChild($player);
+    return $player;
 }
 
 function changeHP(player) {
     const $playerLife = document.querySelector('.player'+ player.player +' .life');
-    player.hp -=20;
+    let $damage = Math.ceil(Math.random() * 20);
+    player.hp = player.hp <= $damage ? 0 : player.hp - $damage;
+    console.log(player.name + ' get damage ' +$damage + ' ' + player.hp + 'hp left ');
     $playerLife.style.width = player.hp + '%';
 
-    if (player.hp < 0){
-
+    if (player.hp === 0){
+        player.player - 1 ? playerWin(player1.name) : playerWin(player2.name);
     }
 }
 
@@ -65,9 +70,10 @@ $randomButton.addEventListener('click', () => {
 
 function playerWin(name){
     const $winTitle = createElement('div', 'loseTitle');
-    $winTitle.innerText = name + ' Win!';
-    return $winTitle;
+    $winTitle.innerText = name + ' Wins!';
+    $randomButton.disabled = true;
+    $arenas.appendChild($winTitle);
 }
 
-createPlayer('player1', player1);
-createPlayer('player2', player2);
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
