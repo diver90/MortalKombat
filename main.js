@@ -11,24 +11,23 @@ const player1 = {
 const player2 = {
     name: 'SubZero',
     hp: 100,
-    img: '- http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon:'Fist',
-        attack: ()=>{
-            console.log(this.name + 'Fight...')
-        },
+    attack: ()=>{
+        console.log(this.name + 'Fight...')
+    },
 };
 
-
-
-function createPlayer(player, playerName, life) {
+function createPlayer(playerClass, player ) {
     const $player = document.createElement('div');
-    $player1.classList.add('player1');
+    $player.classList.add(playerClass);
     const $progressbar = document.createElement('div');
     $progressbar.classList.add('progressbar');
     const $character = document.createElement('div');
     $character.classList.add('character');
     const $life = document.createElement('div');
-    $progressbar.classList.add('life');
+    $life.classList.add('life');
+    $life.innerHTML = player.hp;
     const $name = document.createElement('div');
     $name.classList.add('name');
     $name.innerHTML = player.name;
@@ -38,7 +37,10 @@ function createPlayer(player, playerName, life) {
     $player.appendChild($character);
     $progressbar.appendChild($life);
     $progressbar.appendChild($name);
-    $character.appendChild($name);
+    $character.appendChild($img);
     const $arenas = document.querySelector('.arenas');
-    $arenas =
+    $arenas.appendChild($player);
 }
+
+createPlayer('player1', player1);
+createPlayer('player2', player2);
