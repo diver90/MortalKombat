@@ -7,11 +7,11 @@ const changeHP = function (damage) {
 };
 
 const elHP = function (){
-    return this.document.querySelector('.player'+ this.player +' .life');
+    return this.querySelector('.player'+ this.player +' .life');
 };
 
 const renderHP = function (){
-    console.log(this.elHP);
+    console.log(this.elHP());
     this.elHP().style.width = this.hp + '%';
 };
 
