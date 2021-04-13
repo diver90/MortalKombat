@@ -78,3 +78,6 @@ fabric.properties
 .idea/modules.xml
 .idea/vcs.xml
 assets/.DS_Store
+/.idea/deployment.xml
+/.idea/MortalKombat.iml
+/.idea/yii2settings.xml

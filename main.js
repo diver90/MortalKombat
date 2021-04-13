@@ -2,20 +2,18 @@ const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
 const changeHP = function (damage) {
-    this.hp = this.hp <= damage ? 0 : this.hp - damage;
-    console.log(this.name + ' get damage ' +damage + ' ' + this.hp + 'hp left ');
+    return this.hp <= damage ? 0 : this.hp - damage;
 };
 
 const elHP = function (){
-    return this.querySelector('.player'+ this.player +' .life');
+    return document.querySelector('.player'+ this.player +' .life');
 };
 
 const renderHP = function (){
-    console.log(this.elHP());
     this.elHP().style.width = this.hp + '%';
 };
 
-const damage = (function (){return Math.ceil(Math.random() * 20)});
+const getRandom = (function (val){return Math.ceil(Math.random() * val)});
 
 const player1 = {
     name: 'Scorpion',
@@ -73,12 +71,20 @@ function createPlayer(playerObj) {
     return $player;
 }
 
+const createReloadButton = function (){
+    const $reloadButtonWrap = createElement('div', 'reloadWrap');
+    const $button = createElement('button', 'button');
+    $button.innerText = 'Restart';
+    $reloadButtonWrap.appendChild($button);
+    return $reloadButtonWrap;
+}
+
 $randomButton.addEventListener('click', () => {
 
 
-    player1.changeHP(damage());
+    player1.hp = player1.changeHP(getRandom(20)); // хотя как по мне логичнее менять HP объекта в самой функции changeHP
     player1.renderHP();
-    player1.changeHP(damage());
+    player2.hp = player2.changeHP(getRandom(20));
     player2.renderHP();
 
     if (player1.hp === 0 || player2.hp === 0) {
@@ -95,12 +101,18 @@ $randomButton.addEventListener('click', () => {
 
 function playerWin(name){
     const $winTitle = createElement('div', 'loseTitle');
+    const $restartButton = createReloadButton();
     if (name) {
         $winTitle.innerText = name + ' Wins!';
     } else {
         $winTitle.innerText = 'Draw';
     }
     $arenas.appendChild($winTitle);
+
+    $arenas.querySelector('.control').replaceChild($restartButton, $randomButton);
+    $restartButton.addEventListener('click', () => {
+        window.location.reload();
+    });
 }
 
 $arenas.appendChild(createPlayer(player1));
