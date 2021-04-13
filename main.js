@@ -1,6 +1,22 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
+const changeHP = function (damage) {
+    this.hp = this.hp <= damage ? 0 : this.hp - damage;
+    console.log(this.name + ' get damage ' +damage + ' ' + this.hp + 'hp left ');
+};
+
+const elHP = function (){
+    return this.document.querySelector('.player'+ this.player +' .life');
+};
+
+const renderHP = function (){
+    console.log(this.elHP);
+    this.elHP().style.width = this.hp + '%';
+};
+
+const damage = (function (){return Math.ceil(Math.random() * 20)});
+
 const player1 = {
     name: 'Scorpion',
     player: 1,
@@ -10,6 +26,9 @@ const player1 = {
     attack: ()=>{
         console.log(this.name + 'Fight...')
     },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 const player2 = {
@@ -21,6 +40,9 @@ const player2 = {
     attack: ()=>{
         console.log(this.name + 'Fight...')
     },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 function createElement(tag, className) {
@@ -51,22 +73,13 @@ function createPlayer(playerObj) {
     return $player;
 }
 
-function changeHP(player, damage) {
-    const $playerLife = document.querySelector('.player'+ player.player +' .life');
-    player.hp = player.hp <= damage ? 0 : player.hp - damage;
-    console.log(player.name + ' get damage ' +damage + ' ' + player.hp + 'hp left ');
-    $playerLife.style.width = player.hp + '%';
-}
-
-function elHP(){
-
-}
-
 $randomButton.addEventListener('click', () => {
-    let damage = (function (){return Math.ceil(Math.random() * 20)});
 
-    changeHP(player1, damage());
-    changeHP(player2, damage());
+
+    player1.changeHP(damage());
+    player1.renderHP();
+    player1.changeHP(damage());
+    player2.renderHP();
 
     if (player1.hp === 0 || player2.hp === 0) {
         $randomButton.disabled = true;
