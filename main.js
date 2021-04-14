@@ -1,6 +1,20 @@
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
+const changeHP = function (damage) {
+    return this.hp <= damage ? 0 : this.hp - damage;
+};
+
+const elHP = function (){
+    return document.querySelector('.player'+ this.player +' .life');
+};
+
+const renderHP = function (){
+    this.elHP().style.width = this.hp + '%';
+};
+
+const getRandom = (function (val){return Math.ceil(Math.random() * val)});
+
 const player1 = {
     name: 'Scorpion',
     player: 1,
@@ -10,6 +24,9 @@ const player1 = {
     attack: ()=>{
         console.log(this.name + 'Fight...')
     },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 const player2 = {
@@ -21,6 +38,9 @@ const player2 = {
     attack: ()=>{
         console.log(this.name + 'Fight...')
     },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 function createElement(tag, className) {
@@ -51,28 +71,48 @@ function createPlayer(playerObj) {
     return $player;
 }
 
-function changeHP(player) {
-    const $playerLife = document.querySelector('.player'+ player.player +' .life');
-    let $damage = Math.ceil(Math.random() * 20);
-    player.hp = player.hp <= $damage ? 0 : player.hp - $damage;
-    console.log(player.name + ' get damage ' +$damage + ' ' + player.hp + 'hp left ');
-    $playerLife.style.width = player.hp + '%';
-
-    if (player.hp === 0){
-        player.player - 1 ? playerWin(player1.name) : playerWin(player2.name);
-    }
+const createReloadButton = function (){
+    const $reloadButtonWrap = createElement('div', 'reloadWrap');
+    const $button = createElement('button', 'button');
+    $button.innerText = 'Restart';
+    $reloadButtonWrap.appendChild($button);
+    return $reloadButtonWrap;
 }
 
 $randomButton.addEventListener('click', () => {
-    changeHP(player1);
-    changeHP(player2);
+
+
+    player1.hp = player1.changeHP(getRandom(20)); // хотя как по мне логичнее менять HP объекта в самой функции changeHP
+    player1.renderHP();
+    player2.hp = player2.changeHP(getRandom(20));
+    player2.renderHP();
+
+    if (player1.hp === 0 || player2.hp === 0) {
+        $randomButton.disabled = true;
+        if(player1.hp === 0 && player1.hp < player2.hp){
+            playerWin(player2.name)
+        } else if(player2.hp === 0 && player2.hp < player1.hp) {
+            playerWin(player1.name)
+        } else {
+            playerWin()
+        }
+    }
 });
 
 function playerWin(name){
     const $winTitle = createElement('div', 'loseTitle');
-    $winTitle.innerText = name + ' Wins!';
-    $randomButton.disabled = true;
+    const $restartButton = createReloadButton();
+    if (name) {
+        $winTitle.innerText = name + ' Wins!';
+    } else {
+        $winTitle.innerText = 'Draw';
+    }
     $arenas.appendChild($winTitle);
+
+    $arenas.querySelector('.control').replaceChild($restartButton, $randomButton);
+    $restartButton.addEventListener('click', () => {
+        window.location.reload();
+    });
 }
 
 $arenas.appendChild(createPlayer(player1));
