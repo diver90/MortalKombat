@@ -15,18 +15,26 @@ const renderHP = function (){
 
 const getRandom = (function (val){return Math.ceil(Math.random() * val)});
 
+const $formFight = document.querySelector('.control')
+
+const HIT = {
+    head: 30,
+    body: 20,
+    foot: 10,
+}
+
+const ATTACK = ['head', 'body', 'foot'];
+
 const player1 = {
     name: 'Scorpion',
     player: 1,
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     weapon: 'Kunai',
-    attack: ()=>{
-        console.log(this.name + 'Fight...')
-    },
-    changeHP: changeHP,
-    renderHP: renderHP,
-    elHP: elHP,
+    attack,
+    changeHP,
+    renderHP,
+    elHP,
 };
 
 const player2 = {
@@ -35,13 +43,26 @@ const player2 = {
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
     weapon:'Fist',
-    attack: ()=>{
-        console.log(this.name + 'Fight...')
-    },
-    changeHP: changeHP,
-    renderHP: renderHP,
-    elHP: elHP,
+    attack,
+    changeHP,
+    renderHP,
+    elHP,
 };
+
+const createReloadButton = function (){
+    const $reloadButtonWrap = createElement('div', 'reloadWrap');
+    const $button = createElement('button', 'button');
+    $button.innerText = 'Restart';
+    $button.addEventListener('click', () => {
+        window.location.reload();
+    });
+    $reloadButtonWrap.appendChild($button);
+    $arenas.appendChild($reloadButtonWrap);
+}
+
+function attack (){
+    console.log(this.name + 'Fight...')
+}
 
 function createElement(tag, className) {
     let $element = document.createElement(tag);
@@ -71,20 +92,50 @@ function createPlayer(playerObj) {
     return $player;
 }
 
-const createReloadButton = function (){
-    const $reloadButtonWrap = createElement('div', 'reloadWrap');
-    const $button = createElement('button', 'button');
-    $button.innerText = 'Restart';
-    $reloadButtonWrap.appendChild($button);
-    return $reloadButtonWrap;
+function playerWin(name){
+    const $winTitle = createElement('div', 'loseTitle');
+    if (name) {
+        $winTitle.innerText = name + ' Wins!';
+    } else {
+        $winTitle.innerText = 'Draw';
+    }
+    $arenas.appendChild($winTitle);
+    createReloadButton();
 }
 
-$randomButton.addEventListener('click', () => {
+$arenas.appendChild(createPlayer(player1));
+$arenas.appendChild(createPlayer(player2));
 
+function enemyAttack(){
+    const hit = ATTACK[getRandom(3) - 1];
+    const defence = ATTACK[getRandom(3) - 1];
 
-    player1.hp = player1.changeHP(getRandom(20)); // хотя как по мне логичнее менять HP объекта в самой функции changeHP
+    return {
+        value: getRandom(HIT[hit]),
+        hit,
+        defence
+    }
+}
+
+$formFight.addEventListener('submit', function (e){
+    e.preventDefault();
+    const enemy = enemyAttack();
+    const attack = {};
+
+    for (let item of $formFight){
+        if(item.checked && item.name === 'hit'){
+            attack.value = getRandom(HIT[item.value]);
+            attack.hit = item.value;
+        }
+        if (item.checked && item.name === 'defence'){
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }
+
+    player1.hp = player1.changeHP(getTotalDamage(enemy,attack));
     player1.renderHP();
-    player2.hp = player2.changeHP(getRandom(20));
+    player2.hp = player2.changeHP(getTotalDamage(attack,enemy));
     player2.renderHP();
 
     if (player1.hp === 0 || player2.hp === 0) {
@@ -97,23 +148,10 @@ $randomButton.addEventListener('click', () => {
             playerWin()
         }
     }
-});
 
-function playerWin(name){
-    const $winTitle = createElement('div', 'loseTitle');
-    const $restartButton = createReloadButton();
-    if (name) {
-        $winTitle.innerText = name + ' Wins!';
-    } else {
-        $winTitle.innerText = 'Draw';
-    }
-    $arenas.appendChild($winTitle);
+})
 
-    $arenas.querySelector('.control').replaceChild($restartButton, $randomButton);
-    $restartButton.addEventListener('click', () => {
-        window.location.reload();
-    });
+function getTotalDamage(attacker, defender) {
+    return attacker.hit !== defender.defence ? attacker.value : 0;
 }
 
-$arenas.appendChild(createPlayer(player1));
-$arenas.appendChild(createPlayer(player2));
