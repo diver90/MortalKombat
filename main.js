@@ -15,13 +15,13 @@ const renderHP = function (){
 
 const getRandom = (function (val){return Math.ceil(Math.random() * val)});
 
-const $formFight = document.querySelector('.control')
+const $formFight = document.querySelector('.control');
 
 const HIT = {
     head: 30,
     body: 20,
     foot: 10,
-}
+};
 
 const ATTACK = ['head', 'body', 'foot'];
 
@@ -120,18 +120,7 @@ function enemyAttack(){
 $formFight.addEventListener('submit', function (e){
     e.preventDefault();
     const enemy = enemyAttack();
-    const attack = {};
-
-    for (let item of $formFight){
-        if(item.checked && item.name === 'hit'){
-            attack.value = getRandom(HIT[item.value]);
-            attack.hit = item.value;
-        }
-        if (item.checked && item.name === 'defence'){
-            attack.defence = item.value;
-        }
-        item.checked = false;
-    }
+    const attack = playerAttack();
 
     player1.hp = player1.changeHP(getTotalDamage(enemy,attack));
     player1.renderHP();
@@ -149,9 +138,23 @@ $formFight.addEventListener('submit', function (e){
         }
     }
 
-})
+});
 
 function getTotalDamage(attacker, defender) {
     return attacker.hit !== defender.defence ? attacker.value : 0;
 }
 
+function playerAttack(){
+    let attack = {};
+    for (let item of $formFight){
+        if(item.checked && item.name === 'hit'){
+            attack.value = getRandom(HIT[item.value]);
+            attack.hit = item.value;
+        }
+        if (item.checked && item.name === 'defence'){
+            attack.defence = item.value;
+        }
+    }
+    $formFight.reset();
+    return attack;
+}
