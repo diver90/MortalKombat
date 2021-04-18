@@ -175,26 +175,30 @@ function generateLogs(type, player1, player2, hit){
     const date = new Date();
     let text;
     let time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    let logsNum = logs[type].length;
+    logsNum < 0 ? logsNum = 0 :'';
     switch (type) {
         case 'start':
             text = logs[type].replace('[player1]', player1.name).replace('[player2]', player2.name).replace('[time]', time);
             break;
         case 'end':
-            text = logs[type][getRandom(3)-1].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
+            text = logs[type][getRandom(logsNum)-1].replace('[playerWins]', player1.name).replace('[playerLose]', player2.name);
             text = `${time} ${text}`
             break;
         case 'hit':
-            text = logs[type][getRandom(18)-1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = logs[type][getRandom(logsNum)-1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
             text = `${time} ${text} ${player2.name} HP -${hit} ${player2.hp}/100`
             break;
         case 'defence':
-            text = logs[type][getRandom(8)-1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
+            text = logs[type][getRandom(logsNum)-1].replace('[playerKick]', player1.name).replace('[playerDefence]', player2.name);
             text = `${time} ${text} ${player2.name} HP ${player2.hp}/100`
             break;
         case 'draw':
             text = logs[type];
             text = `${time} ${text}`
             break;
+        default:
+            text = 'Something happen... But what?';
     }
 
     console.log(text);
