@@ -1,3 +1,19 @@
+const changeHP = function (damage) {
+    return this.hp <= damage ? 0 : this.hp - damage;
+};
+
+const elHP = function (){
+    return document.querySelector('.player'+ this.player +' .life');
+};
+
+const renderHP = function (){
+    this.elHP().style.width = this.hp + '%';
+};
+
+function attack (){
+    console.log(this.name + 'Fight...')
+}
+
 export const player1 = {
     name: 'Scorpion',
     player: 1,
