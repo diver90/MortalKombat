@@ -25,29 +25,7 @@ const HIT = {
 
 const ATTACK = ['head', 'body', 'foot'];
 
-const player1 = {
-    name: 'Scorpion',
-    player: 1,
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: 'Kunai',
-    attack,
-    changeHP,
-    renderHP,
-    elHP,
-};
-
-const player2 = {
-    name: 'SubZero',
-    player: 2,
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon:'Fist',
-    attack,
-    changeHP,
-    renderHP,
-    elHP,
-};
+import { player1, player2 } from "./player.js";
 
 const createReloadButton = function (){
     const $reloadButtonWrap = createElement('div', 'reloadWrap');
@@ -146,13 +124,13 @@ function getTotalDamage(attacker, defender) {
 
 function playerAttack(){
     let attack = {};
-    for (let item of $formFight){
-        if(item.checked && item.name === 'hit'){
-            attack.value = getRandom(HIT[item.value]);
-            attack.hit = item.value;
+    for (let {checked, name, value}  of $formFight){
+        if(checked && name === 'hit'){
+            attack.value = getRandom(HIT[value]);
+            attack.hit = value;
         }
-        if (item.checked && item.name === 'defence'){
-            attack.defence = item.value;
+        if (checked && name === 'defence'){
+            attack.defence = value;
         }
     }
     $formFight.reset();
