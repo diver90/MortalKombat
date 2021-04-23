@@ -77,4 +77,3 @@ export function generateLogs(type, player1, player2, damage) {
 
     $chat.insertAdjacentHTML('afterbegin',  `<p>${text}</p>`);
 }
-

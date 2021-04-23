@@ -1,3 +1,4 @@
+
 import { player1, player2 } from  './player.js';
 import { generateLogs } from './logs.js';
 import { createElement } from "./utils.js";
@@ -46,9 +47,10 @@ $formFight.addEventListener('submit', function (e){
         generateLogs('hit', player1, player2, player.value);
     } else {
         generateLogs('defence', player1, player2);
+
     }
+}
 
     showResult();
 
 });
-
