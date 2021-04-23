@@ -4,17 +4,17 @@ import { generateLogs } from './logs.js';
 import { createElement } from "./utils.js";
 import { $arenas, $formFight, enemyAttack, playerAttack, showResult } from "./fight.js";
 
-function createPlayer(playerObj) {
-    const $player = createElement('div', 'player' + playerObj.player);
+function createPlayer({player, hp, name, img}) {
+    const $player = createElement('div', 'player' + player);
     const $progressbar = createElement('div', 'progressbar');
     const $character = createElement('div', 'character');
     const $life = createElement('div', 'life');
     const $name = createElement('div', 'name');
     const $img = createElement('img');
 
-    $life.style.width = playerObj.hp + '%';
-    $name.innerText = playerObj.name;
-    $img.src = playerObj.img;
+    $life.style.width = hp + '%';
+    $name.innerText = name;
+    $img.src = img;
 
     $player.appendChild($progressbar);
     $player.appendChild($character);
@@ -24,10 +24,14 @@ function createPlayer(playerObj) {
     return $player;
 }
 
-$arenas.appendChild(createPlayer(player1));
-$arenas.appendChild(createPlayer(player2));
+function init(){
 
-generateLogs('start', player1, player2);
+    $arenas.appendChild(createPlayer(player1));
+    $arenas.appendChild(createPlayer(player2));
+    generateLogs('start', player1, player2);
+}
+
+init();
 
 $formFight.addEventListener('submit', function (e){
     e.preventDefault();
@@ -49,8 +53,6 @@ $formFight.addEventListener('submit', function (e){
         generateLogs('defence', player1, player2);
 
     }
-}
-
     showResult();
 
 });
