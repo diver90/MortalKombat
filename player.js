@@ -1,17 +1,27 @@
-import {Player} from "./classPlayer.js";
+class Player {
+    constructor(props) {
+            this.player = props.player,
+            this.name = props.name,
+            this.hp = props.hp,
+            this.img = props.img
+    }
 
-export const player1 = new Player({
-        name: 'Scorpion',
-        player: 1,
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-       weapon: 'Kunai',
-    });
 
-    export const player2 = new Player({
-        name: 'SubZero',
-        player: 2,
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-       weapon: 'Fist',
-    });
+    changeHP = function (damage) {
+        return this.hp <= damage ? 0 : this.hp - damage;
+    };
+
+    elHP = () => {
+        return document.querySelector('.player' + this.player + ' .life');
+    };
+
+    renderHP = () => {
+        this.elHP().style.width = this.hp + '%';
+    };
+
+    attack = () => {
+        console.log(this.name + 'Fight...')
+    }
+}
+
+export default Player;
