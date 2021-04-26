@@ -1,81 +1,85 @@
-import {player1, player2} from "./player.js";
-import {generateLogs} from "./logs.js";
+import Logs from "./logs.js";
 import {createElement, getRandom} from "./utils.js";
+import {HIT, ATTACK} from "./const.js";
 
-const HIT = {
-    head: 30,
-    body: 20,
-    foot: 10,
-};
+class Fight {
 
-const ATTACK = ['head', 'body', 'foot'];
+    constructor(props) {
+        this.player1 = props.player1
+        this.player2 = props.player2
+    }
 
+    generateLogs = new Logs().generateLogs;
 
-export const $arenas = document.querySelector('.arenas');
-export const $formFight = document.querySelector('.control');
-export const $randomButton = document.querySelector('.button');
+    $arenas = document.querySelector('.arenas');
 
-export const showResult = () => {
-    if (player1.hp === 0 || player2.hp === 0) {
-        $randomButton.disabled = true;
-        if(player1.hp === 0 && player1.hp < player2.hp){
-            playerWin(player2.name)
-            generateLogs('end', player2, player1);
-        } else if(player2.hp === 0 && player2.hp < player1.hp) {
-            playerWin(player1.name)
-            generateLogs('end', player1, player2);
+    $formFight = document.querySelector('.control');
+
+    $randomButton = document.querySelector('.button');
+
+    showResult = () => {
+        if (this.player1.hp === 0 || this.player2.hp === 0) {
+            this.$randomButton.disabled = true;
+            if (this.player1.hp === 0 && this.player1.hp < this.player2.hp) {
+                this.playerWin(this.player2.name)
+                this.generateLogs('end', this.player2, this.player1);
+            } else if (this.player2.hp === 0 && this.player2.hp < this.player1.hp) {
+                this.playerWin(this.player1.name)
+                this.generateLogs('end', this.player1, this.player2);
+            } else {
+                this.playerWin()
+                this.generateLogs('draw', this.player1, this.player2);
+            }
+        }
+    }
+
+    playerAttack = () => {
+        let attack = {};
+        for (let {checked, name, value} of this.$formFight) {
+            if (checked && name === 'hit') {
+                attack.value = getRandom(HIT[value]);
+                attack.hit = value;
+            }
+            if (checked && name === 'defence') {
+                attack.defence = value;
+            }
+        }
+        this.$formFight.reset();
+        return attack;
+    }
+
+    enemyAttack = () => {
+        const hit = ATTACK[getRandom(3) - 1];
+        const defence = ATTACK[getRandom(3) - 1];
+
+        return {
+            value: getRandom(HIT[hit]),
+            hit,
+            defence
+        }
+    }
+
+    playerWin = (name) => {
+        const $winTitle = createElement('div', 'loseTitle');
+        if (name) {
+            $winTitle.innerText = name + ' Wins!';
         } else {
-            playerWin()
-            generateLogs('draw', player1, player2);
+            $winTitle.innerText = 'Draw';
         }
+        this.$arenas.appendChild($winTitle);
+        this.createReloadButton();
+    }
+
+    createReloadButton = () => {
+        const $reloadButtonWrap = createElement('div', 'reloadWrap');
+        const $button = createElement('button', 'button');
+        $button.innerText = 'Restart';
+        $button.addEventListener('click', () => {
+            window.location.reload();
+        });
+        $reloadButtonWrap.appendChild($button);
+        this.$arenas.appendChild($reloadButtonWrap);
     }
 }
 
-export const playerAttack = () => {
-    let attack = {};
-    for (let {checked, name, value} of $formFight){
-        if(checked && name === 'hit'){
-            attack.value = getRandom(HIT[value]);
-            attack.hit = value;
-        }
-        if (checked && name === 'defence'){
-            attack.defence = value;
-        }
-    }
-    $formFight.reset();
-    return attack;
-}
-
-export const enemyAttack = () => {
-    const hit = ATTACK[getRandom(3) - 1];
-    const defence = ATTACK[getRandom(3) - 1];
-
-    return {
-        value: getRandom(HIT[hit]),
-        hit,
-        defence
-    }
-}
-
-
-const playerWin = (name) => {
-    const $winTitle = createElement('div', 'loseTitle');
-    if (name) {
-        $winTitle.innerText = name + ' Wins!';
-    } else {
-        $winTitle.innerText = 'Draw';
-    }
-    $arenas.appendChild($winTitle);
-    createReloadButton();
-}
-
-const createReloadButton = function (){
-    const $reloadButtonWrap = createElement('div', 'reloadWrap');
-    const $button = createElement('button', 'button');
-    $button.innerText = 'Restart';
-    $button.addEventListener('click', () => {
-        window.location.reload();
-    });
-    $reloadButtonWrap.appendChild($button);
-    $arenas.appendChild($reloadButtonWrap);
-}
+export default Fight;

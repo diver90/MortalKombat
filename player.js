@@ -1,39 +1,27 @@
-const changeHP = function (damage) {
-    return this.hp <= damage ? 0 : this.hp - damage;
-};
+class Player {
+    constructor(props) {
+            this.player = props.player,
+            this.name = props.name,
+            this.hp = props.hp,
+            this.img = props.img
+    }
 
-const elHP = function (){
-    return document.querySelector('.player'+ this.player +' .life');
-};
 
-const renderHP = function (){
-    this.elHP().style.width = this.hp + '%';
-};
+    changeHP = function (damage) {
+        return this.hp <= damage ? 0 : this.hp - damage;
+    };
 
-function attack (){
-    console.log(this.name + 'Fight...')
+    elHP = () => {
+        return document.querySelector('.player' + this.player + ' .life');
+    };
+
+    renderHP = () => {
+        this.elHP().style.width = this.hp + '%';
+    };
+
+    attack = () => {
+        console.log(this.name + 'Fight...')
+    }
 }
 
-export const player1 = {
-    name: 'Scorpion',
-    player: 1,
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: 'Kunai',
-    attack,
-    changeHP,
-    renderHP,
-    elHP,
-};
-
-export const player2 = {
-    name: 'SubZero',
-    player: 2,
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon:'Fist',
-    attack,
-    changeHP,
-    renderHP,
-    elHP,
-};
+export default Player;
