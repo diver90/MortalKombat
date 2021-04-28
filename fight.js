@@ -37,7 +37,7 @@ class Fight {
         let attack = {};
         for (let {checked, name, value} of this.$formFight) {
             if (checked && name === 'hit') {
-                attack.value = getRandom(HIT[value]);
+                //attack.value = getRandom(HIT[value]);
                 attack.hit = value;
             }
             if (checked && name === 'defence') {

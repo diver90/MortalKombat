@@ -1,6 +1,7 @@
 import Player from "./player.js";
 import Fight from "./fight.js";
 import {createElement} from "./utils.js";
+import Server from "./server.js";
 
 export default class Game {
 
@@ -22,9 +23,11 @@ export default class Game {
         $progressbar.appendChild($name);
         $character.appendChild($img);
         return $player;
-    }
+    };
 
-    start = () => {
+    start = async () => {
+        const server = new Server;
+        let player2 = await server.getRandomEnemy();
         this.player1 = new Player({
             name: 'Scorpion',
             player: 1,
@@ -34,11 +37,8 @@ export default class Game {
         });
 
         this.player2 = new Player({
-            name: 'SubZero',
+            ...player2,
             player: 2,
-            hp: 100,
-            img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-            weapon: 'Fist',
         });
 
         const fight = new Fight({
@@ -46,10 +46,10 @@ export default class Game {
                 player2: this.player2
         });
 
-        fight.$formFight.addEventListener('submit', function (e) {
+        fight.$formFight.addEventListener('submit', async function (e) {
             e.preventDefault();
-            const enemy = fight.enemyAttack();
-            const player = fight.playerAttack();
+            let playerAttack = fight.playerAttack();
+            const {player1: player, player2: enemy} = await server.getFight(playerAttack.hit, playerAttack.defence);
 
             if (enemy.hit !== player.defence) {
                 fight.player1.hp = fight.player1.changeHP(enemy.value);
