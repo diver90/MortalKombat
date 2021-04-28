@@ -27,13 +27,11 @@ export default class Game {
 
     start = async () => {
         const server = new Server;
+        let player1 = JSON.parse(localStorage.getItem('player1'));
         let player2 = await server.getRandomEnemy();
         this.player1 = new Player({
-            name: 'Scorpion',
+            ...player1,
             player: 1,
-            hp: 100,
-            img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-            weapon: 'Kunai',
         });
 
         this.player2 = new Player({

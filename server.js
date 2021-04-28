@@ -1,10 +1,15 @@
 class Server {
     apiUrl = 'https://reactmarathon-api.herokuapp.com/api/mk/';
 
-    getPlayerAll = () => {
-        fetch(this.apiUrl + 'players').then((res => {
-            console.log(res);
-        }))
+    getPlayerAll = async () => {
+        return await fetch(this.apiUrl + 'players')
+            .then((res) => {
+            return res.json()
+        })
+            .catch(
+                (reason) => {
+                    return console.log(reason.json());
+                });
     };
 
     getRandomEnemy = async () => {
