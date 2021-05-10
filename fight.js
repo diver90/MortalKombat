@@ -37,7 +37,7 @@ class Fight {
         let attack = {};
         for (let {checked, name, value} of this.$formFight) {
             if (checked && name === 'hit') {
-                attack.value = getRandom(HIT[value]);
+                //attack.value = getRandom(HIT[value]);
                 attack.hit = value;
             }
             if (checked && name === 'defence') {
@@ -75,7 +75,7 @@ class Fight {
         const $button = createElement('button', 'button');
         $button.innerText = 'Restart';
         $button.addEventListener('click', () => {
-            window.location.reload();
+            window.location.pathname = '/';
         });
         $reloadButtonWrap.appendChild($button);
         this.$arenas.appendChild($reloadButtonWrap);
